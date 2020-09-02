@@ -4,11 +4,11 @@
   "version": "0.1.0",
   "description": "A Strapi application",
   "scripts": {
-    "client": "cd client && yarn start",
+    "client": "cd client && yarn build",
     "develop": "strapi develop",
     "start": "strapi start",
     "build-client": "cd client && yarn build",
-    "dev": "concurrently --kill-others-on-fail \"strapi develop\" \"yarn client\"",
+    "dev": "concurrently --kill-others-on-fail \"yarn develop\" \"yarn client\"",
     "build": "strapi build",
     "strapi": "strapi"
   },
