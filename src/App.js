@@ -1,30 +1,25 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
+import useFetcher from './hooks/useFetcher'
 import Post from './components/post'
 import './App.css'
 
-
+// eslint-disable-next-line
 const API_URL = 'https://localhost:1337/posts'
 
-function App() {
+function App(props) {
 
-  const [posts, setPosts] = useState([])
 
-  useEffect(() => {
-    const getPost = async () => {
-      // const res = await fetch(`${API_URL}/posts`)
-      const res = await fetch('http://localhost:1337/posts/')
-      const data = res.json
-      setPosts(data)
-    }
-    getPost()
-  }, [])
+  const getPost = useFetcher('http://localhost:1337/posts', {})
+  console.log('GATEPOSTS', getPost);
   
+
+  if (!getPost.data) return (<div>Loading...</div>)
 
   return (
     <div>
       HELLO WORLD + STRAPI
       {
-        posts.map(post => <Post
+        getPost.data.map(post => <Post
             key={post.id}
             description={post.description}
             likes={post.likes}
