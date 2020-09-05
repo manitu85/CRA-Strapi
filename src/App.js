@@ -4,12 +4,12 @@ import Post from './components/post'
 import './App.css'
 
 // eslint-disable-next-line
-const API_URL = 'https://localhost:1337/posts'
+const API_URL_POSTS = 'http://localhost:1337/posts'
 
 function App(props) {
 
 
-  const getPost = useFetcher('http://localhost:1337/posts', {})
+  const getPost = useFetcher(`${API_URL_POSTS}`, {})
   console.log('GATEPOSTS', getPost);
   
 

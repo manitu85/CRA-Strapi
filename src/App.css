@@ -1,5 +1,5 @@
 body {
-  width: 290px;
+  width: 450px;
   margin: auto;
 }
 .Post{
@@ -10,7 +10,7 @@ body {
 }
 
 .Post__Image{
-  max-width: 250px;
+  max-width: 420px;
 }
 
 a{
