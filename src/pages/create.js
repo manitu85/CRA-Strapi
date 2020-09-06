@@ -28,7 +28,7 @@ const Create = () => {
           value={description}
           onChange={e => setDescription(e.target.value)}
         />
-        <button>Sumbit</button>
+        <button>Submit</button>
       </form>
     </div>
   )
