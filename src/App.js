@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import Home from 'pages/home'
 import Create from 'pages/create'
-import Nav from 'components/nav'
+import Nav from 'components/navigation'
 import './App.css'
 
 

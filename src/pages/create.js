@@ -3,18 +3,25 @@ import React, {useState} from 'react'
 const Create = () => {
 
   const [description, setDescription] = useState('')
+  const [file, setFile] = useState(null)
+
+  // console.log('FILE', file);
+  
 
   const handleSubmit = async e => {
     e.preventDefault()
 
+    const formData = new FormData()
+    formData.append('data', JSON.stringify({ description }))
+    formData.append('files.image', file)
+
     const res = await fetch('http://localhost:1337/posts', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({description})
+      body: formData
     }) 
 
     const data = await res.json()
-    console.log('data', data);
+    console.log('DATA', data);
     
   }
 
@@ -27,6 +34,11 @@ const Create = () => {
           placeholder='Description'
           value={description}
           onChange={e => setDescription(e.target.value)}
+        />{' '}
+        <input 
+          type='file'
+          placeholder='Add a File'
+          onChange={e => setFile(e.target.files[0])}
         />
         <button>Submit</button>
       </form>
