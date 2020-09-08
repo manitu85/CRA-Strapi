@@ -48,18 +48,20 @@ const Create = () => {
 
       <form onSubmit={handleSubmit}>
         <input
-          placeholder='Description'
+          placeholder="Description"
           value={description}
-          onChange={e => {
-            setError('')  
-            setDescription(e.target.value)}}
-        />{' '}
-        <input 
-          type='file'
-          placeholder='Add a File'
-          onChange={e => {
+          onChange={(event) => {
             setError('')
-            setFile(e.target.files[0])}}
+            setDescription(event.target.value)
+          }}
+        />
+        <input
+          type="file"
+          placeholder="Add a File"
+          onChange={(event) => {
+            setError('')
+            setFile(event.target.files[0])
+          }}
         />
         <button>Submit</button>
       </form>

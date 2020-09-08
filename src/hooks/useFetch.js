@@ -10,7 +10,7 @@ const useFetch = (url, options) => {
     const fetchData = async () => {
       setIsLoading(true)
       try {
-        const res = await fetch(url)
+        const res = await fetch(url, options)
         const data = await res.json()
         setData(data)
         setIsLoading(false)

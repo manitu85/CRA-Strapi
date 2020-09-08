@@ -1,0 +1,1 @@
+export const API_URL_POSTS = 'http://localhost:1337/posts'
