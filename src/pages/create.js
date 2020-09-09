@@ -21,7 +21,7 @@ const Create = () => {
       return
     }
 
-    const formData = new FormData()
+    let formData = new FormData()
     formData.append('data', JSON.stringify({ description }))
     formData.append('files.image', file)
 
@@ -50,17 +50,17 @@ const Create = () => {
         <input
           placeholder="Description"
           value={description}
-          onChange={(event) => {
+          onChange={e => {
             setError('')
-            setDescription(event.target.value)
+            setDescription(e.target.value)
           }}
         />
         <input
           type="file"
           placeholder="Add a File"
-          onChange={(event) => {
+          onChange={e => {
             setError('')
-            setFile(event.target.files[0])
+            setFile(e.target.files[0])
           }}
         />
         <button>Submit</button>
