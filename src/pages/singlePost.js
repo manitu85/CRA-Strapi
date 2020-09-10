@@ -6,16 +6,22 @@ import { API_URL_POSTS } from 'lib/api'
 
 const SinglePost = ({ match, history }) => {
 
+  const [loading, setLoading] = useState(true)
+  const [post, setPost] = useState({})
   const [edit, setEdit] = useState(false)
-  const [editDescription, setEditDescription] = useState('')
+  const [description, setDescription] = useState('')
 
   const { id } = match.params
 
-  const fetchPost = useFetch(`${API_URL_POSTS}/${id}`)
-  const post = fetchPost.data
-  console.log(post)
+  const fetchPost = async () => {
+    const res = await fetch(`${API_URL_POSTS}/${id}`)
+    const data = await res.json()
 
-  if (!post) return (<div>Loading...</div>)
+    console.log("data", data)
+    setPost(data)
+    setDescription(data.description)
+    setLoading(false)
+  }
 
   const handleDeletePost = async () => {
     const res = await fetch(`${API_URL_POSTS}/${id}`, {
@@ -27,44 +33,70 @@ const SinglePost = ({ match, history }) => {
 
   const handleEditSubmit = async e => {
     e.preventDefault()
-    console.log("handleEditSubmit")
 
-    const res = await fetch(`${API_URL_POSTS}/${id}`)
+    const res = await fetch(`http://localhost:1337/posts/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Authorization': `Bearer ${user.jwt}`
+      },
+      body: JSON.stringify({
+        description
+      })
+    })
+
     const data = await res.json()
-    console.log("handleEditSubmit data", data)
-    
-
     fetchPost()
-
+    history.push('/')
+    console.log("handleEditSubmitData", data)
   }
+  
+  useEffect(() => {
+    fetchPost()
+  }, [])
 
-  return(
+  return (
     <div>
-      {
-        post.id ?
-         ( <Post
-            description={post.description}
-            likes={post.likes}
-            url={post.image && post.image.url}
-          />) : post.id && (<p>Not found 404</p>)
+      {loading &&
+        <p>Loading...</p>
       }
-      <button onClick={handleDeletePost}>Delete Post</button>
-      <button onClick={() => setEdit(true)}>Edit Post</button>
-      {
-        edit && (
-          <form onSubmit={handleEditSubmit}>
-            <input 
-              type='text'
-              value=''
-              onChange={e => {}}
-              placeholder='New description'
-            />
-            <button>Confirm</button>
-          </form>
-        )
+      {!loading &&
+        <>
+          {post.id &&
+            <>
+              <Post
+                description={post.description}
+                url={post.image && post.image.url}
+                likes={post.likes}
+              />
+                <button onClick={handleDeletePost}>Delete this Post</button>
+                <button onClick={() => setEdit(true)}>Edit this Post</button>
+                {edit &&
+                  <form onSubmit={handleEditSubmit}>
+                    <input
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="New description"
+                    />
+                    <button>Confirm</button>
+                  </form>
+                }
+            </>
+          }
+          {!post.id &&
+            <p>404 - not found</p>
+          }
+        </>
       }
     </div>
   )
 }
 
+
+
 export default SinglePost
+
+
+          
+
+       
