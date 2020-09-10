@@ -1,17 +1,21 @@
-import React, {useState, useEffect} from 'react'
-import useFetch from 'hooks/useFetch'
+import React, {useState, useEffect, useContext} from 'react'
 import Post from 'components/post'
 import { API_URL_POSTS } from 'lib/api'
+import { UserContext } from 'contexts/userContext'
 
 
 const SinglePost = ({ match, history }) => {
 
   const [loading, setLoading] = useState(true)
-  const [post, setPost] = useState({})
-  const [edit, setEdit] = useState(false)
+  const [post,setPost] = useState({})
+  const [edit,setEdit] = useState(false)
   const [description, setDescription] = useState('')
 
   const { id } = match.params
+
+  const {user, setUser} = useContext(UserContext)
+  console.log(user);
+  
 
   const fetchPost = async () => {
     const res = await fetch(`${API_URL_POSTS}/${id}`)
@@ -47,7 +51,6 @@ const SinglePost = ({ match, history }) => {
 
     const data = await res.json()
     fetchPost()
-    history.push('/')
     console.log("handleEditSubmitData", data)
   }
   

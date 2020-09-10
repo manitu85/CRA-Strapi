@@ -5,6 +5,7 @@
       "components/*": ["components/*"],
       "hooks/*": ["hooks/*"],
       "pages/*": ["pages/*"],
+      "contexts/*": ["contexts/*"],
       "lib/*": ["lib/*"]
     }
   },
