@@ -29,7 +29,10 @@ const SinglePost = ({ match, history }) => {
 
   const handleDeletePost = async () => {
     const res = await fetch(`${API_URL_POSTS}/${id}`, {
-      method: 'DELETE' 
+      method: 'DELETE' ,
+      headers: {
+        'Authorization': `Bearer ${user.jwt}`
+      },
     })
     const deletePost = await res.json()
     history.push('/')
@@ -42,7 +45,7 @@ const SinglePost = ({ match, history }) => {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        // 'Authorization': `Bearer ${user.jwt}`
+        'Authorization': `Bearer ${user.jwt}`
       },
       body: JSON.stringify({
         description
@@ -72,17 +75,21 @@ const SinglePost = ({ match, history }) => {
                 url={post.image && post.image.url}
                 likes={post.likes}
               />
-                <button onClick={handleDeletePost}>Delete this Post</button>
-                <button onClick={() => setEdit(true)}>Edit this Post</button>
-                {edit &&
-                  <form onSubmit={handleEditSubmit}>
-                    <input
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder="New description"
-                    />
-                    <button>Confirm</button>
-                  </form>
+                {
+                  user && <>
+                    <button onClick={handleDeletePost}>Delete this Post</button>
+                    <button onClick={() => setEdit(true)}>Edit this Post</button>
+                    {edit &&
+                      <form onSubmit={handleEditSubmit}>
+                        <input
+                          value={description}
+                          onChange={(e) => setDescription(e.target.value)}
+                          placeholder="New description"
+                        />
+                        <button>Confirm</button>
+                      </form>
+                    }
+                  </>
                 }
             </>
           }
