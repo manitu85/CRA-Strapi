@@ -9,11 +9,14 @@ export default () => {
   return (
     <div>
       <NavLink to="/" exact>Home</NavLink>{' '}
-      {
-        user && <NavLink to="/create" exact>Create</NavLink>
+      {user &&
+        <NavLink to="/create" exact> Create </NavLink>
       }{' '}
       {
-        !user && <NavLink to="/login" exact>Login</NavLink>
+        !user && <>
+          <NavLink to="/login" exact>Login</NavLink>{' '}
+          <NavLink to="/signup" exact>Sign Up</NavLink>
+        </>
       }
     </div>
   )

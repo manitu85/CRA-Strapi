@@ -1,56 +1,71 @@
-import React, {useState} from 'react'
+import React, { useState, useContext } from 'react'
+import { UserContext } from 'contexts/userContext'
+import { API_URL_POSTS } from 'lib/api'
 
-const Create = () => {
 
-  const [description, setDescription] = useState('')
+export default ({ history }) => {
+
+  const [description, setDescription] = useState([])
   const [file, setFile] = useState(null)
   const [error, setError] = useState('')
 
-  // console.log('FILE', file);
-  
-  const handleSubmit = async e => {
+  console.log("file", file)
+
+  const { user } = useContext(UserContext)
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
-    if(!description) {
-      setError('Please add description')
+    if (!user) {
+      setError('Please log in first')
       return
     }
 
-    if(!file) {
-      setError('Please add an image')
+    if (!description) {
+      setError('Please add a description')
       return
     }
 
-    let formData = new FormData()
+    if (!file) {
+      setError('Please add a File')
+      return
+    }
+
+    const formData = new FormData()
     formData.append('data', JSON.stringify({ description }))
     formData.append('files.image', file)
 
-    try{
-      const res = await fetch('http://localhost:1337/posts', {
+    try {
+      const res = await fetch(API_URL_POSTS, {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user.jwt}`
+        },
         body: formData
-      }) 
+      })
 
       const data = await res.json()
-      console.log('DATA', data);
-    }catch(err){
-      console.log('Exception', err);
+      history.push('/')
+
+      console.log("data", data)
+    } catch (err) {
+      console.log("Exception ", err)
       setError(err)
     }
-
   }
 
-  return(
-    <div className='Create'>
+  return (
+    <div className="Create">
       <h2>Create</h2>
 
       {error && <p>{error}</p>}
 
       <form onSubmit={handleSubmit}>
         <input
+          type='text'
           placeholder="Description"
           value={description}
-          onChange={e => {
+          onChange={(e) => {
             setError('')
             setDescription(e.target.value)
           }}
@@ -58,15 +73,15 @@ const Create = () => {
         <input
           type="file"
           placeholder="Add a File"
-          onChange={e => {
+          onChange={(e) => {
             setError('')
             setFile(e.target.files[0])
           }}
         />
         <button>Submit</button>
       </form>
+
     </div>
   )
-}
 
-export default Create
+}
