@@ -2,6 +2,7 @@ import React, {useState, useEffect, useContext} from 'react'
 import Post from 'components/post'
 import { API_URL_POSTS } from 'lib/api'
 import { UserContext } from 'contexts/userContext'
+import { LikesContext } from 'contexts/likesContext'
 
 
 const SinglePost = ({ match, history }) => {
@@ -13,8 +14,17 @@ const SinglePost = ({ match, history }) => {
 
   const { id } = match.params
 
-  const {user, setUser} = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
+  const { likesGiven, reloader } = useContext(LikesContext)
+  
   console.log(user);
+
+
+  const isPostAlreadyLiked = (() => {
+    return likesGiven && likesGiven.find(like => like.post && like.post.id == id)
+  })()
+
+  console.log("isPostAlreadyLiked", isPostAlreadyLiked)
   
 
   const fetchPost = async () => {
@@ -44,8 +54,8 @@ const SinglePost = ({ match, history }) => {
     const res = await fetch(`http://localhost:1337/posts/${id}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${user.jwt}`
+        'Authorization': `Bearer ${user.jwt}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         description
@@ -55,6 +65,40 @@ const SinglePost = ({ match, history }) => {
     const data = await res.json()
     fetchPost()
     console.log("handleEditSubmitData", data)
+  }
+
+  const handleLike = async () => {
+    try {
+      const res = await fetch('http://localhost:1337/likes', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user.jwt}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          post: parseInt(id)
+        })
+      })
+      fetchPost()
+      reloader()
+    } catch (err) {
+      console.log("Exception ", err)
+    }
+  }
+
+  const handleRemoveLike = async () => {
+    try {
+      const res = await fetch(`http://localhost:1337/likes/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user.jwt}`
+        }
+      })
+      fetchPost()
+      reloader()
+    } catch (err) {
+      console.log("Exception ", err)
+    }
   }
   
   useEffect(() => {
@@ -75,6 +119,17 @@ const SinglePost = ({ match, history }) => {
                 url={post.image && post.image.url}
                 likes={post.likes}
               />
+                {user &&
+                  <>
+                    {isPostAlreadyLiked &&
+                      <button onClick={handleRemoveLike}>Remove Like</button>
+                    }
+
+                    {!isPostAlreadyLiked &&
+                      <button onClick={handleLike}>Like</button>
+                    }
+                  </>
+                }
                 {
                   user && <>
                     <button onClick={handleDeletePost}>Delete this Post</button>
