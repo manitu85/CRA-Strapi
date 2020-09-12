@@ -17,7 +17,8 @@ const SinglePost = ({ match, history }) => {
   const { user, setUser } = useContext(UserContext)
   const { likesGiven, reloader } = useContext(LikesContext)
   
-  console.log(user);
+  console.log('USER', user);
+  console.log('SET USER', setUser);
 
 
   const isPostAlreadyLiked = (() => {
@@ -37,7 +38,7 @@ const SinglePost = ({ match, history }) => {
     setLoading(false)
   }
 
-  const handleDeletePost = async () => {
+  const handleDelete = async () => {
     const res = await fetch(`${API_URL_POSTS}/${id}`, {
       method: 'DELETE' ,
       headers: {
@@ -119,33 +120,36 @@ const SinglePost = ({ match, history }) => {
                 url={post.image && post.image.url}
                 likes={post.likes}
               />
-                {user &&
-                  <>
-                    {isPostAlreadyLiked &&
-                      <button onClick={handleRemoveLike}>Remove Like</button>
-                    }
 
-                    {!isPostAlreadyLiked &&
-                      <button onClick={handleLike}>Like</button>
-                    }
-                  </>
-                }
-                {
-                  user && <>
-                    <button onClick={handleDeletePost}>Delete this Post</button>
-                    <button onClick={() => setEdit(true)}>Edit this Post</button>
-                    {edit &&
-                      <form onSubmit={handleEditSubmit}>
-                        <input
-                          value={description}
-                          onChange={(e) => setDescription(e.target.value)}
-                          placeholder="New description"
-                        />
-                        <button>Confirm</button>
-                      </form>
-                    }
-                  </>
-                }
+              {user &&
+                <>
+                  {isPostAlreadyLiked &&
+                    <button onClick={handleRemoveLike}>Remove Like</button>
+                  }
+
+                  {!isPostAlreadyLiked &&
+                    <button onClick={handleLike}>Like</button>
+                  }
+                </>
+              }
+
+              {user && user.user && post && post.author && post.author.id === user.user.id &&
+                <>
+                  <button onClick={handleDelete}>Delete this Post</button>
+                  <button onClick={() => setEdit(true)}>Edit this Post</button>
+                  {edit &&
+                    <form onSubmit={handleEditSubmit}>
+                      <input
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="New description"
+                      />
+                      <button>Confirm</button>
+                    </form>
+                  }
+                </>
+              }
+
             </>
           }
           {!post.id &&

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react'
-import { UserContext } from './UserContext'
+import { UserContext } from './userContext'
 
 export const LikesContext = createContext(null)
 
