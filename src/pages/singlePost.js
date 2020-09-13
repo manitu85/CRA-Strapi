@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react'
 import Post from 'components/post'
-import { API_URL_POSTS } from 'lib/api'
+import { API_URL_POSTS, API_URL_LIKES } from 'lib/api'
 import { UserContext } from 'contexts/userContext'
 import { LikesContext } from 'contexts/likesContext'
 
@@ -25,14 +25,14 @@ const SinglePost = ({ match, history }) => {
     return likesGiven && likesGiven.find(like => like.post && like.post.id == id)
   })()
 
-  console.log("isPostAlreadyLiked", isPostAlreadyLiked)
+  console.log('isPostAlreadyLiked', isPostAlreadyLiked)
   
 
   const fetchPost = async () => {
     const res = await fetch(`${API_URL_POSTS}/${id}`)
     const data = await res.json()
 
-    console.log("data", data)
+    console.log('data', data)
     setPost(data)
     setDescription(data.description)
     setLoading(false)
@@ -52,7 +52,7 @@ const SinglePost = ({ match, history }) => {
   const handleEditSubmit = async e => {
     e.preventDefault()
 
-    const res = await fetch(`http://localhost:1337/posts/${id}`, {
+    const res = await fetch(`${API_URL_POSTS}/${id}`, {
       method: 'PUT',
       headers: {
         'Authorization': `Bearer ${user.jwt}`,
@@ -65,12 +65,12 @@ const SinglePost = ({ match, history }) => {
 
     const data = await res.json()
     fetchPost()
-    console.log("handleEditSubmitData", data)
+    console.log('handleEditSubmitData', data)
   }
 
   const handleLike = async () => {
     try {
-      const res = await fetch('http://localhost:1337/likes', {
+      const res = await fetch(API_URL_LIKES, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${user.jwt}`,
@@ -83,13 +83,13 @@ const SinglePost = ({ match, history }) => {
       fetchPost()
       reloader()
     } catch (err) {
-      console.log("Exception ", err)
+      console.log('Exception ', err)
     }
   }
 
   const handleRemoveLike = async () => {
     try {
-      const res = await fetch(`http://localhost:1337/likes/${id}`, {
+      const res = await fetch(`${API_URL_LIKES}/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${user.jwt}`
@@ -98,7 +98,7 @@ const SinglePost = ({ match, history }) => {
       fetchPost()
       reloader()
     } catch (err) {
-      console.log("Exception ", err)
+      console.log('Exception ', err)
     }
   }
   
@@ -142,7 +142,7 @@ const SinglePost = ({ match, history }) => {
                       <input
                         value={description}
                         onChange={(e) => setDescription(e.target.value)}
-                        placeholder="New description"
+                        placeholder='New description'
                       />
                       <button>Confirm</button>
                     </form>
